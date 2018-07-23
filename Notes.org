@@ -1,16 +1,17 @@
-* Outline and Writing                                                :hjiang:
-** insert heading
-M-Enter will insert a heading in current position
-        and the newly heading is same with privious heading
-** promote heading
-M-Left  will promote the heading by one level
-** demote heading 
-M-Right will demote the heading by one level
-** promote entire subtree
-M-Shift-Left will promote an entire subtree
-** demote entire subtree
-M-Shift-Right will demote an entire subtree
-* Plain List
+* Org Mode
+** Outline and Writing                                               :hjiang:
+*** insert heading
+ M-Enter will insert a heading in current position
+         and the newly heading is same with privious heading
+*** promote heading
+ M-Left  will promote the heading by one level
+*** demote heading 
+ M-Right will demote the heading by one level
+*** promote entire subtree
+ M-Shift-Left will promote an entire subtree
+*** demote entire subtree
+ M-Shift-Right will demote an entire subtree
+** Plain List
 ** unordered plain list
    - first subitem
    - second subiten
@@ -29,20 +30,20 @@ M-Shift-Right will demote an entire subtree
    - [ ] this is second checkbox
    - [ ] this is third checkbox
 start the line with - [ ], toggle the check box using C-c C-c
-* hyper links                                            :hyper_links_in_org:
+** hyper links                                           :hyper_links_in_org:
 ** simple urls
 http://www.baidu.com
 ** simple file path
 file:/etc/file.pdf
-* plain-text tables
-| name   | sex | age | number |
-|--------+-----+-----+--------|
-| hjiang | man | 23  | 234    |
-|        |     |     |        |
-|        |     |     |        |
-|        |     |     |        |
-* tags                                                         :org_set_tags:
-* emacs+git => magit
+** plain-text tables
+ | name   | sex | age | number |
+ |--------+-----+-----+--------|
+ | hjiang | man | 23  | 234    |
+ |        |     |     |        |
+ |        |     |     |        |
+ |        |     |     |        |
+** tags                                                        :org_set_
+* Emacs+Git => Magit
 ** magit-status : to display information about the current Git repository 
 ** p,n : Move between sections using ~p~ and ~n~.
    [tab]: expand or collapse the section at point.
