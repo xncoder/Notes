@@ -42,3 +42,15 @@ file:/etc/file.pdf
 |        |     |     |        |
 |        |     |     |        |
 * tags                                                         :org_set_tags:
+* emacs+git => magit
+** magit-status : to display information about the current Git repository 
+** p,n : Move between sections using ~p~ and ~n~.
+   [tab]: expand or collapse the section at point.
+   staging:         ~s~ to stage the changes you have made to specific file.
+   unstaging:       (~u~) commands operate on the change at point
+   commit:          And then of course you want to commit your changes.  Type ~c~.
+   common commit:   We want to create a "normal" commit, which is done by typing ~c~ again
+   real commit:     Write a message and then type ~C-c C-c~ to actually create the commit.
+   push:            ~P~ to bring up the push popup
+                    ~p~ to push to a branch with the same name as the local branch onto the
+                    remote configured as the push-remote
