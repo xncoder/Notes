@@ -55,3 +55,10 @@ file:/etc/file.pdf
    push:            ~P~ to bring up the push popup
                     ~p~ to push to a branch with the same name as the local branch onto the
                     remote configured as the push-remote
+* ToDoList
+** <2018-07-23 一>
+   1. learn more about emacs magit
+   2. config emacs as a mail client
+   3. body training
+   4. 10min meditation
+   5. find some good videos of emacs
