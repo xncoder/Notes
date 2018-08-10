@@ -1,48 +1,41 @@
 * Org Mode
-** Outline and Writing                                               :hjiang:
+** Outline and Writing
 *** insert heading
- M-Enter will insert a heading in current position
-         and the newly heading is same with privious heading
+    M-Enter will insert a heading in current position
+        and the newly heading is same with privious heading
 *** promote heading
- M-Left  will promote the heading by one level
+    M-Left  will promote the heading by one level
 *** demote heading 
- M-Right will demote the heading by one level
+    M-Right will demote the heading by one level
 *** promote entire subtree
- M-Shift-Left will promote an entire subtree
+    M-Shift-Left will promote an entire subtree
 *** demote entire subtree
- M-Shift-Right will demote an entire subtree
+    M-Shift-Right will demote an entire subtree
 ** Plain List
-** unordered plain list
+*** unordered plain list
    - first subitem
    - second subiten
      + another item
      + some thing else
 
 (- or +) then press M-Enter, org mode will add a (- or +) automatically
-** ordered plain list
+*** ordered plain list
    1. this is the first item
    2. this is the second item
    3. hsh
    4. this is the trird item
 (1.) then press M-Enter, org mode will add a (2.) automatically
-** add a checkbox
+*** add a checkbox
    - [ ] this is fiest checkbox
    - [ ] this is second checkbox
    - [ ] this is third checkbox
 start the line with - [ ], toggle the check box using C-c C-c
-** hyper links                                           :hyper_links_in_org:
-** simple urls
-http://www.baidu.com
-** simple file path
-file:/etc/file.pdf
-** plain-text tables
- | name   | sex | age | number |
- |--------+-----+-----+--------|
- | hjiang | man | 23  | 234    |
- |        |     |     |        |
- |        |     |     |        |
- |        |     |     |        |
-** tags                                                        :org_set_
+** hyper links
+*** simple urls
+    http://www.baidu.com
+*** link to file
+    file:/files.txt
+** tables
 * Gdb usage
 ** compiling source file to debug            :symbolic:dubugging:information:
    gcc -g test.c -o test
@@ -101,7 +94,7 @@ file:/etc/file.pdf
 
 *** hardware watch point
     >watch var
-
+     
 * Emacs+Git => Magit
 ** magit-status : to display information about the current Git repository 
 ** p,n : Move between sections using ~p~ and ~n~.
@@ -114,6 +107,7 @@ file:/etc/file.pdf
    push:            ~P~ to bring up the push popup
                     ~p~ to push to a branch with the same name as the local branch onto the
                     remote configured as the push-remote
+
 * unix/linux
 ** append one file to another file's tail
    cat file1.txt >> file2.txt
@@ -268,6 +262,47 @@ file:/etc/file.pdf
 
   --exclude-dir, --include-dir
 
+*** Search a file with a specific name:
+    hjiang@hjiang:~/Gitspace/TestSpace/ROOT$ tree                                                                                                                          
+.                                                                                                                                                                      
+├── DIR1                                                                                                                                                               
+│   ├── fileA.c                                                                                                                                                        
+│   └── fileB.c                                                                                                                                                        
+├── DIR2                                                                                                                                                               
+│   ├── #fileC.c#                                                                                                                                                      
+│   └── fileC.c                                                                                                                                                        
+├── GPATH                                                                                                                                                              
+├── GRTAGS                                                                                                                                                             
+├── GTAGS                                                                                                                                                              
+└── README   
+    
+    This is the tree structure of /ROOT directory.
+    
+    hjiang@hjiang:~/Gitspace/TestSpace/ROOT$ find . -name fileC.c                      |├── GRTAGS                                                                        $
+    ./DIR2/fileC.c
+
+*** Search files with a pattern:
+    hjiang@hjiang:~/Gitspace/TestSpace/ROOT$ find . -name *.c                                                                                                              
+    ./DIR2/.#fileC.c                                                                                                                                                       
+    ./DIR2/fileC.c                                                                                                                                                         
+    ./DIR1/fileA.c                                                                                                                                                         
+    ./DIR1/fileB.c   
+*** Find and delete a file with confirmation
+    hjiang@hjiang:~/Gitspace/TestSpace/ROOT$ find . -name fileC.c -exec rm -i {} \;                                                                                        
+    rm: remove regular file './DIR2/fileC.c'? n 
+*** Search for empty file and directory
+    find . -empty
+*** Search for file with entered permission
+    find . -perm 664
+*** Search text within multiply files
+    hjiang@hjiang:~/Gitspace/TestSpace/ROOT$ find . -type f -name "*.c" -exec grep 'func' {} \;                                                                            
+    func2() { i++; }                                                                                                                                                       
+    func2() { i--; }                                                                                                                                                       
+    func3(){                                                                                                                                                               
+            func1();                                                                                                                                                       
+            func1();                                                                                                                                                       
+            func2();                                                                                                                                                       
+    func1() {...} 
 ** sed command
    essential command: s for substitution
    sed 's/one/ONE' file.txt
@@ -310,6 +345,97 @@ file:/etc/file.pdf
      history : see the list of excuted command
      !13 : recall command with index is 13
 
+** GNU global
+   Move to a directory, then run "gtags" command.
+   Then gtags will traverses sub-directories, pick up symbols from the source files
+   and makes 3 tag files under current directory.
+   
+   GTAGS    definition database
+   GRTAGS   reference database
+   GPATH    path name database 
+*** basic usage
+   When we get the previous files, we can use them to:
+   1. find the relative path of a symbol:
+      global symbol-mame
+   
+   2. locate the refrence of a symbol:
+      global -r symbol-name
+
+   3. use posix regex find path of a symbol:
+      global 'func[1-3]'
+
+   4. show detail info of a symbol:
+      gloabl -x func1
+      
+      hjiang@hjiang:~/TestTags$ global -x func1                                                                                                                              
+      func1               1 DIR1/fileB.c     func1() { printf("This is function1!\n"); }  
+   
+   5. get absolute path of a symbol:
+      gloabl -a func1
+
+   6. find symbol which is not find in GTAGS
+      
+      hjiang@hjiang:~/TestTags$ global X                                                                                                                                     
+      hjiang@hjiang:~/TestTags$
+
+   7. locates the lines which have the specified pattern
+      
+      hjiang@hjiang:~/TestTags$ global -xg 'func'                                                                                                                            
+      func                2 DIR1/fileA.c       func1();                                                                                                                      
+      func                3 DIR1/fileA.c       func2();                                                                                                                      
+      func                1 DIR1/fileB.c     func1() { printf("This is function1!\n"); }                                                                                     
+      func                2 DIR2/fileC.c     func2(){ i++; }                                                                                                                 
+      func                4 DIR2/fileC.c     func2(){ i--; }                                                                                                                 
+      func                6 DIR2/fileC.c     func3()                                                                                                                         
+      func                8 DIR2/fileC.c       func1();  
+
+    8. get the path name of the specified pattern
+      
+      hjiang@hjiang:~/TestTags$ global -P fileA                                                                                                                              
+      DIR1/fileA.c
+
+    9. print the list of tags in a file:
+     
+      hjiang@hjiang:~/TestTags$ global -f DIR2/fileC.c                                                                                                                  
+      func2               2 DIR2/fileC.c     func2(){ i++; }                                                                                                                 
+      func2               4 DIR2/fileC.c     func2(){ i--; }                                                                                                                 
+      func3               6 DIR2/fileC.c     func3()    
+*** expend emacs using global
+    1. gtags-find-tag 
+    2. find reference of a symbol
+       gtags-find-rtag
+    3. find current token definition
+       gtags-find-tag-froml-here
+    4. find symbol witch not defined in GTAGS
+       gtags-find-symbol
+    5. locate a string:
+       gtags-find-with-grep
+*** Using gtags find definition in project
+   - when ggtags-mode is enabled, use "ggtags-find-tag-dwim" 
+     + if the tag at point is definition, then jump to a reference.
+       if there are more than one references, list them.
+     + if the tag at point is reference, then jump to the definition.
+     + if the tag at point is a include header, then jump to the header.
+*** Using gtags find reference in project
+   using helm-gtags: helm-gtags-dwim or helm-gtags-find-rtags
+   + the point is inside the function, the prompt will default to function name.
+   + the point is on a function, it lists references of the function
+   + if  point is on a variable, C-c g s(gtags-find-symbol) will list the varible in this buffer
+*** find function that current function call
+   + 
+** Get the source code of a program under linux
+   
+** Speedbar and sr-speedbar
+    Basic usage:
+    + Use SPC to open the children of a node.
+    + RET to open the node in another window. If node is a file, open that file; if node is a directory, enter that directory; if node is a tag in a file, jump to the location of that tag in the file.
+    + U to go up parent directory.
+    + n or p moves to next or previous node.
+    + M-n or M-p moves to next or previous node at the current level.
+    + b switches to buffer list using Speedbar presentation. You can also open children of each buffer.
+    + f switches back to file list.
+
+    sr-speedbar-toggle open sr-speedbar
 * passwd
   OA and OutNet:
   Name:hjiang
@@ -486,7 +612,6 @@ file:/etc/file.pdf
    SEA USER_FTOP_MSG_FILE "MASTER HRRM"
    显示:
    [INFORMATION] HRRM on Host(XXXX) is the Master HRRM 
-
 * Atp Frame Test
 ** upgrade to latest atp version
    @BACK01$:[TOFF15.DATA.POST_BACKUP]POST_RESTORE_CNTRL.COM
@@ -494,19 +619,55 @@ file:/etc/file.pdf
 ** front end order sending (iterate)
    file:/d/Org/Atp/FrameTest/allatp.sql
 ** set 100 test
+| set | order book size | order number(when switch) | pbu status (Normal/Abnormal) | order resp(Normal/Abnormal) | v_log  | front and back diff(Same/Diff) |
+|-----+-----------------+---------------------------+------------------------------+-----------------------------+--------+--------------------------------|
+| 100 |         1000000 |                    521534 | Normal                       | Normal                      | NO_ERR | Same                           |
+| 101 |          400000 |                           |                              |                             |        |                                |
+| 102 |                 |                           |                              |                             |        |                                |
+| 104 |                 |                           |                              |                             |        |                                |
+| 105 |                 |                           |                              |                             |        |                                |
+| 106 |                 |                           |                              |                             |        |                                |
+| 109 |                 |                           |                              |                             |        |                                |
 
-* windows upan recover
-** Win+R(administrator) --> diskpart --> list disk
-   select disk x(Enter) --> clean
-   MyComputer --> Manager --> Disk Manager --> rebuild your disk 
 * Core PlatFrom Auto Run:
 ** SVN
    http://svn.tc.com/MultiGroupTask///trunk/
+** Upgrade
+   cd /cygdrive/y/DevRelease/ATP_AUTO_INTEG/A050000  
+   tel 198.1.153.1
+   set def BACK01$:[PATCH.15.A050000_AC_PATCH]
+   @BACK01$:[AIR.SCRIPT]AUTO_RESTORE.COM BACK01$:[TOFF55.DATA.POST_BACKUP.POST_BACKUP_A040700_CUR_20070312] "" temp01$:[testenv_Data.atp.dst]DST_ENV_CFG.BCK
 
+   ./AtpCode/DDCL/POST_RESTORE_CNTRL.COM:1736:         " PLEASE ENTER THE USER FOR THE CS:[DEFAULT ''TCG_USR_CS_NET']"
+   ./AtpCode/DDCL/POST_RESTORE_CNTRL.COM:1741:         " PLEASE ENTER THE PASSWORD FOR THE CS:[USER ''TCG_USR_CS_NET_TMP']"
+   
+   ./AtpCode/DDCL/TOFF_ONLINE_MANAGEMENT.COM:113:$ ASK_FOR_TC_PWD = """''SHIFT'PLEASE ENTER ''TCG_USR_HD_ADM' PASSWORD ON TC: """
+   ./AtpCode/DDCL/TOFF_ONLINE_MANAGEMENT.COM:140:$ ASK_FOR_CS_PWD = """''SHIFT'PLEASE ENTER ''TCG_USR_CS_ADM' PASSWORD ON CS: """
+   ./AtpCode/DDCL/TOFF_ONLINE_MANAGEMENT.COM:164:$ ASK_FOR_EI_PWD = """''SHIFT'PLEASE ENTER ''TCG_USR_EI_ADM' PASSWORD ON EI: """
+
+   Q1: cscheck 若填201(不是0201), 结点范围检查错误
+
+   bashftp ./PATCH_DATA.COM BACK01$:[PATCH.15.A050000_AC_PATCH] u
+   bashftp ./GEN_PATCH_SCRIPT.PL BACK01$:[PATCH.15.A050000_AC_PATCH] u
+   bashftp ./UPGRADE_VMS.COM BACK01$:[PATCH.15.A050000_AC_PATCH] u
+  
+   COPY [.GENERIC.15]FPENVCONF_AC.DAT 198.1.40.1"NOP_15 SHANGHAI"::TOFF$:[TOFF15.DATA.FILES]FPENVCONF.DAT /FTP /L
+   COPY [.GENERIC.15]FPENVCONF_AC.DAT 198.1.46.1"NOP_15 SHANGHAI"::TOFF$:[TOFF15.DATA.FILES]FPENVCONF.DAT /FTP /L
+
+   @BACK01$:[TOFF15.DATA.POST_BACKUP]POST_RESTORE_CNTRL.COM
+
+   %PURGE-W-SEARCHFAIL, error searching for DSA0:[TOFF15.SYSTEM.EXE]*.EXE;*
+   -RMS-E-FNF, file not found
+   %PURGE-W-SEARCHFAIL, error searching for DSA0:[TOFF_NET15.DCL]*.COM;*
+   -RMS-E-FNF, file not found
 * ToDoList
-** <2018-07-23 一>
-   1. learn more about emacs magit
-   2. config emacs as a mail client
-   3. body training
-   4. 10min meditation
-   5. find some good videos of emacs
+** <2018-07-17 ÖÜ¶þ>                                               :20180717:
+*** DONE [#B] learn emacs org and make a todo list                      :org:
+*** DONE [#A] get the feeling of the offline of EI               :ei:offline:
+*** TODO [#C] programming pearl, ch2 algorithm                    :algorithm:
+*** code submit:
+    [[file:code_submit.org][code_submit]]
+
+** <2018-07-18 ÖÜÈý>
+** <2018-07-20 ÖÜÎå>
+** <2018-07-23 ÖÜÒ»>
