@@ -29,7 +29,7 @@
    - [ ] this is fiest checkbox
    - [ ] this is second checkbox
    - [ ] this is third checkbox
-start the line with - [ ], toggle the check box using C-c C-c
+   start the line with - [ ], toggle the check box using C-c C-c
 ** hyper links
 *** simple urls
     http://www.baidu.com
@@ -76,25 +76,423 @@ start the line with - [ ], toggle the check box using C-c C-c
    >printf "format" i    :format display
 
 ** misc stuff
-
 *** backtrace
     >backtrace            :(bt) show current function call stack
-
 *** addtional stepping
     >finish               :exit current excution function and return to the calling function
     >stepi                :step a single assembly instuction
     >advance loc          :coutinue to this temp loc
-
 *** jump to arbitrary section
-    >jump 3               :jump to line 3
-
+    >jump 3               :jump to line 3    
 *** set variables and values
     >set (i=20)
     >set variable i = 40
-
 *** hardware watch point
     >watch var
      
+* Emacs...
+** Go back to a previous position:
+   exchange-point-and-mark [C-x C-x]
+
+** [Bookmark]
+   C-x r m   : set s bookmark
+   C-x r l   : list bookmarks
+   C-x r b   : jump to bookmark
+
+** [Register]
+   C-x r n : store number in register
+   C-x r s : store region in register
+   C-x r SPC : store point in register
+   C-x r + : increment number in register
+   C-x r j : jump to register
+   C-x r i : insert content of register
+   C-x r w : store window configuration in register
+   C-x r f : store frameset in register
+
+** [Neotree]
+   C-c n : neotree toggle
+   C-c c : neotree set directory
+
+** [C-u] universal aguments:
+   * C-u a : display aaaa
+   * C-u C-u a : display aaaaaaaaaaaaaaaa
+   * C-u 10 a : display aaaaaaaaaa
+   * M-0 to M-9:
+     M-5 a : display aaaaa
+   * M-d : kill the word immediatly following point
+     M-- M-d : kill the word immediatly before point
+
+** emacs command tempo
+   M-- M-d kill the previous word before point
+           you just keep your finger on mata key and press - d
+	       this combination do not break "tempo"
+
+   C-- M-d do the same thing
+           but you have to press C--, then release and press M-d
+
+   Negative argment add directionality to commands
+   Digits add repetition or change how a command works
+
+   Example: when a edit a line, i want to change the previous word from low case to upcase
+            how can i do IT?
+
+   Solve:
+	 M-l : convert following word to lower case
+	 M-u : convert following word to upper case
+	 M-- M-u : convert previous word to upper case
+
+	 M-c : capitalize the following word
+	 C-x C-l : convert region to lower case
+	 C-x C-u : convert region to upper case
+
+     C-x C-h : the help doc of the C-x
+
+** Configuring Emacs:
+   5.1 [M-x Customize] display the Customize interface and all the group
+   [M-x Customize] -> change some config -> save and apply
+
+   5.2 Use Emacs Lisp
+
+   find help in emacs:
+   * [Info Manual]
+     [M-x info] or [C-h i]
+
+   * [Apropos]
+     it shines because you can narrow what you are looking for
+     it support regular expression
+
+     [example] find all commands work on word
+     [C-h a -word$]
+
+     [M-x apropos] track down both variables, commands and functions
+     [M-x apropos-command or C-h a] only command
+
+** movement
+   In emacs, the syntax table alone decides the makeup of a word as
+   a syntactic unit.
+
+   moving by s-expression:
+
+   Example:
+   d = {
+     'Hello' : 'world',
+     'Foo' : 'bar',
+     }
+
+   [C-M-f] move forward by s-expression
+   [C-M-b] move backward by s-expression
+   [C-M-n] Move forward to the next list
+   [C-M-p] move backward to the previous list
+
+   [C-M-u] [C-M-k] move up and kill the balanced expression you were just In
+
+   moving by line:
+
+   This is a test line;
+   [C-a] moves point to the begining of the line
+   [C-e] moves point to the end of the line
+   [M-m] moves point to the first no-white space character of the line
+
+   moving by word:
+   [M-f] move forward by word
+   [M-b] move backward by word
+
+   word movement is dictated by the major mode you are using
+
+   what is a word?
+   when you move the point around the screen, it moves according to the syntax table
+   and the general rules governing forward-word and backward-word
+
+   [C-h s] view syntax table of current buffer
+
+   word movement is not symmetri
+
+** special movement
+   7.1 move by paragraph
+   [M-{] move forward to the end of the paragraph
+   [M-}] move backward to the begining of the paragraph
+
+   7.2 move by sentence
+   this is a sentence.  This is other sentence.
+   [M-a] moving to the begining of a sentence
+   [M-e] moving to the end of a sentence
+
+   7.3 move by defun
+
+   int addtwo(int a, int b)
+   {
+	return a+b;
+   }
+
+** Book Mark and Register:
+   [C-x r m] set a bookmark
+   [C-x r l] list bookmark
+   [C-x r b] jump to bookmark
+
+   you can use help memory: book mark is just a kind of rigister
+   r could mean register
+   
+   m : set mark
+   l : list mark
+   b : browse a mark
+
+   Book mark is permenent, but rigister is transient:
+   you can store follwing data into rigister:
+   a. window configurations and framesets
+   b. points
+   c. numbers and text
+
+   use rigster store a rigion and then copy the
+   context of this rigion to other place
+
+   A. set mark and move point to store a rigion
+   B. C-x r s save the rigion, then input a character to name the rigion
+   c. C-x r i insert the rigion, input the character is ok
+
+** Selection and Region
+   the boundary of a region is made up of point and the mark
+   the region is always defined as the continous block of text
+   between the point and the mark.
+
+   tips: use help in Emacs
+   [C-h w] command-name
+   [C-h k] key-sequence
+   [C-h f] function-name
+   [C-h f] variable-name
+
+   command of region and mark:
+   [C-q] set the mark and toggle the region
+   [C-q] [C-q] set the mark and then deactive it
+   [C-u] [C-q] jumps to the mark, and repeat calls
+               calls go further back the mark ring
+
+   [C-x] [C-x] Exchange the point and the mark
+               you can see the point's move
+
+   Selection Compatility Mode:
+
+   9.1 Delete-Selection-Mode:
+       input text will delete the selected region
+   9.2 Shift-Selection-Mode:
+       S+<right> or S+<left> will select the rigion one character by one
+   9.3 CUA mode:
+       Let you use
+       C-z undo
+       C-x cut
+       C-c copy
+       C-v paste
+       as a new emacs user, you may use it.
+       after some time, get out of it.
+
+** Setting the mark:
+   the C-<SPC> set the mark, then move the point to select the region.
+   then do some funtion on this region.
+   That some curbersome, if you want to make precise selections,
+   you better use emacs's dedicated mark command
+
+   [M-h] Mark the next paragraph
+   [C-x h] Mark the whole buffer
+   [C-M-h] Mark the next defun
+   [C-x C-p] Mark the next page
+   [M-@] Mark the next word
+
+   emacs useful mark command:
+   mark-defun
+   mark-end-of-sentence
+   mark-page
+   mark-paragraph
+   mark-sexp
+   mark-whole-buffer
+   mark-word
+
+** Searching and Indexing
+    key binding		Purpose
+    C-s			Begins an incremental Searching
+    C-r			Begins an backward incremental Searching
+    C-M
+
+    Emacs case key binding and command
+
+    key binding	   Purpose
+    M-l		   downcase-word
+    M-u		   uppercase-word
+    M-c		   capitalize-word
+
+    C-x C-l	   downcase-region
+    C-x C-u	   uppercase-region
+
+    Searching History (Searching ring)
+
+    M-n	      	   move to next item in searching History
+    M-p 	   move to previous item in searching History
+    C-M-i	   "TAB"-complete search string against previous searching ring
+    C-s C-s 	   Begin Isearch against last search string
+    C-r C-r	   Begin backward Isearch against last Searching string
+
+    searching for strings at point:
+    C-w	      Add word at point to the searching string
+    C-M-y     Add character at point to the searching string
+    [just use backspace to delete added word or character]
+
+    M-s C-e   add rest of line to search ring
+    C-y	      "yank" from clipboard to search string
+
+
+    some searching toggle:
+    M-s c or [M-c]	Toggles case-sensitivity
+    M-s r or [M-r]      Toggles	regular-expression mode
+    M-s w    		Toggles word mode
+    M-s _		Toggles symbol mode
+    M-s <SPC>		Toggles lax whitespace matching
+
+    Each toggle command only affects the current Isearch and will not persist.
+
+** Occur: Print lines matching an expression
+    M-s o  	 Occur Mode
+    M-s o 	 Activate occur on current search string
+    		 inside Isearch
+
+    In occur mode, you can use such useful keys:
+    M-n, M-p 	 Go to next and previous occurrence
+    <,>	 	 Go to beginning and end of the buffer
+    g		 Revert the buffer
+    q		 Quit
+    e		 Switch to occur edit mode : Why this is a useful command
+    C-c C-c	 Exit occur edit mode
+
+    you can use occur to search something, then use "e" swicth
+    to occur edit mode, change the searching result, finally
+    use C-c C-c save the change.
+
+** Edit: kill and Yank Text
+    [key binding]	[Purpose]
+    C-d	 		Delete character
+    <Backspace>		Delete Previous character
+    M-d,C-<backspace>	Kill word
+    C-k			Kill rest of line
+    M-k			Kill sentence
+    C-M-k		Kill s-expression
+    C-S-<backspace>	kill current line
+
+    The difference bettween delete and kill:
+    deleted text is not retained in your kill ring whereas killed text is.
+
+    digits argument and negative argument:
+    C-3 C-d 	    Delete 3 character after current point
+    C--	C-d	    Delete 1 character before current point
+    M-3 M-d	    Kill 3 words after current point
+    C-M-- C-M-k	    Kill s-expression before current point
+
+    clipboard-equivalent commands in Emacs:
+    C-w	    	    Kill active region(cut)
+    M-w		    Copy to kill ring (copy)
+    C-M-w	    Append kill
+    C-y		    Yank last kill (paste)
+    M-y		    Cycle through kill ring,
+    		    replace yanked text
+
+    Tips about emacs Kill:
+    A. Consecutive kills append to the kill ring
+    B. The kill ring can hold many items
+    C. The kill ring is global bettween all the buffers in Emacs
+    D. Killing is also deleting
+    E. Marking is unnecessary
+       M-d is much quick than "C-@ C-w"
+
+** Transposing text:
+    [key binding]   [Purpose]
+    C-t	 			Transposing characters
+    M-t				Transposing words
+    C-M-t			Transposing s-expressions
+    C-x C-t			Transposing lines
+    M-x transpose-paragraphs	transposing paragraphs
+    M-x transpose-sentences	Transposing sentences
+
+** emacs as a c/c++ ide
+    (use linux kernel source as test project)
+
+** M-s . : isearch-forward-symbol-at-point
+    search a word at point
+
+** using register in emacs:
+    what we can put in the register?
+    A. a piece of text
+    B. a rectangle of text
+    C. position we want to move back
+
+    each register has its own name, such as 'a' or 'A';
+    'a' and 'A' are diffrent
+
+    a rigister can contain one thing at a time
+
+    M-x view-register <RET> r
+       Display a description of what register r contains
+
+    18.1 position register
+
+         Record the position of point and the current buffer in register r(point-to-register)
+         C-x r <SPC> r
+
+         after the above command, we can view-register:
+         Register r contains a buffer position:
+         buffer emacs.txt, position 9916
+
+    18.2 text register
+
+         Copy region into register r(copy-to-register)
+         C-x r s r
+         Insert text from register r(insert-register)
+         C-x r i r
+
+         Append region to text in register r
+         M-x append-to-register <RET> r
+         Prepend region to text in register r
+         M-x prepend-to-register <RET> r
+
+** column editing
+    1. select a rectangle(region) and delete
+
+    M-x set-mark-command
+    Move the point to some position
+    M-x kill-rectangle
+
+     4567 8900 1234
+     2222 2222 2344
+     3334 3333 2222
+
+    2. replace a rectangle(region)
+
+    M-x set-mark-command
+    Move the point to some position
+    M-x replace-rectangle
+
+    3. yank and paste rectangle(region)
+
+    M-x set-mark-command
+    Move the point to some position
+    M-x kill-rectangle
+    move the point to another position
+    M-x yank-rectangle
+
+    4. insert a column of numbers
+
+    M-x set-mark-command
+    Move the point to next line begin position
+    M-x rectangle-line-numbers
+    
+    1 hjiang
+    2 heng
+    3 heng
+
+    5. move a region
+
+    djhksh
+    jskldjl
+    kjhsdk
+** Short cut keystrock...
+   M-s s      ---> set-mark-command
+   M-s n      ---> neotree-toggle
+   C-x space  ---> rectangle-mark-mode
 * Emacs+Git => Magit
 ** magit-status : to display information about the current Git repository 
 ** p,n : Move between sections using ~p~ and ~n~.
@@ -262,47 +660,21 @@ start the line with - [ ], toggle the check box using C-c C-c
 
   --exclude-dir, --include-dir
 
-*** Search a file with a specific name:
-    hjiang@hjiang:~/Gitspace/TestSpace/ROOT$ tree                                                                                                                          
-.                                                                                                                                                                      
-├── DIR1                                                                                                                                                               
-│   ├── fileA.c                                                                                                                                                        
-│   └── fileB.c                                                                                                                                                        
-├── DIR2                                                                                                                                                               
-│   ├── #fileC.c#                                                                                                                                                      
-│   └── fileC.c                                                                                                                                                        
-├── GPATH                                                                                                                                                              
-├── GRTAGS                                                                                                                                                             
-├── GTAGS                                                                                                                                                              
-└── README   
+*** Search within files
+    Search for files only end with .php and look for the string "$test" inside those files:
     
-    This is the tree structure of /ROOT directory.
-    
-    hjiang@hjiang:~/Gitspace/TestSpace/ROOT$ find . -name fileC.c                      |├── GRTAGS                                                                        $
-    ./DIR2/fileC.c
+    1. find -exec \;
+       find . -name \*.php -type f -exec grep -Hn '$test' {} \;
 
-*** Search files with a pattern:
-    hjiang@hjiang:~/Gitspace/TestSpace/ROOT$ find . -name *.c                                                                                                              
-    ./DIR2/.#fileC.c                                                                                                                                                       
-    ./DIR2/fileC.c                                                                                                                                                         
-    ./DIR1/fileA.c                                                                                                                                                         
-    ./DIR1/fileB.c   
-*** Find and delete a file with confirmation
-    hjiang@hjiang:~/Gitspace/TestSpace/ROOT$ find . -name fileC.c -exec rm -i {} \;                                                                                        
-    rm: remove regular file './DIR2/fileC.c'? n 
-*** Search for empty file and directory
-    find . -empty
-*** Search for file with entered permission
-    find . -perm 664
-*** Search text within multiply files
-    hjiang@hjiang:~/Gitspace/TestSpace/ROOT$ find . -type f -name "*.c" -exec grep 'func' {} \;                                                                            
-    func2() { i++; }                                                                                                                                                       
-    func2() { i--; }                                                                                                                                                       
-    func3(){                                                                                                                                                               
-            func1();                                                                                                                                                       
-            func1();                                                                                                                                                       
-            func2();                                                                                                                                                       
-    func1() {...} 
+    2. find -exec \+
+       find . -name \*.php -type f -exec grep -Hn '$test' {} \+
+
+    3. find | xargs -n1
+       find . -name \*.php -type f -print0 | xargs -0 -n1 grep -Hn '$test'
+
+    4. find | xargs
+       find . -name \*.php -type f -print0 | xargs -0 grep -Hn '$test'
+
 ** sed command
    essential command: s for substitution
    sed 's/one/ONE' file.txt
@@ -345,97 +717,21 @@ start the line with - [ ], toggle the check box using C-c C-c
      history : see the list of excuted command
      !13 : recall command with index is 13
 
-** GNU global
-   Move to a directory, then run "gtags" command.
-   Then gtags will traverses sub-directories, pick up symbols from the source files
-   and makes 3 tag files under current directory.
-   
-   GTAGS    definition database
-   GRTAGS   reference database
-   GPATH    path name database 
-*** basic usage
-   When we get the previous files, we can use them to:
-   1. find the relative path of a symbol:
-      global symbol-mame
-   
-   2. locate the refrence of a symbol:
-      global -r symbol-name
-
-   3. use posix regex find path of a symbol:
-      global 'func[1-3]'
-
-   4. show detail info of a symbol:
-      gloabl -x func1
-      
-      hjiang@hjiang:~/TestTags$ global -x func1                                                                                                                              
-      func1               1 DIR1/fileB.c     func1() { printf("This is function1!\n"); }  
-   
-   5. get absolute path of a symbol:
-      gloabl -a func1
-
-   6. find symbol which is not find in GTAGS
-      
-      hjiang@hjiang:~/TestTags$ global X                                                                                                                                     
-      hjiang@hjiang:~/TestTags$
-
-   7. locates the lines which have the specified pattern
-      
-      hjiang@hjiang:~/TestTags$ global -xg 'func'                                                                                                                            
-      func                2 DIR1/fileA.c       func1();                                                                                                                      
-      func                3 DIR1/fileA.c       func2();                                                                                                                      
-      func                1 DIR1/fileB.c     func1() { printf("This is function1!\n"); }                                                                                     
-      func                2 DIR2/fileC.c     func2(){ i++; }                                                                                                                 
-      func                4 DIR2/fileC.c     func2(){ i--; }                                                                                                                 
-      func                6 DIR2/fileC.c     func3()                                                                                                                         
-      func                8 DIR2/fileC.c       func1();  
-
-    8. get the path name of the specified pattern
-      
-      hjiang@hjiang:~/TestTags$ global -P fileA                                                                                                                              
-      DIR1/fileA.c
-
-    9. print the list of tags in a file:
-     
-      hjiang@hjiang:~/TestTags$ global -f DIR2/fileC.c                                                                                                                  
-      func2               2 DIR2/fileC.c     func2(){ i++; }                                                                                                                 
-      func2               4 DIR2/fileC.c     func2(){ i--; }                                                                                                                 
-      func3               6 DIR2/fileC.c     func3()    
-*** expend emacs using global
-    1. gtags-find-tag 
-    2. find reference of a symbol
-       gtags-find-rtag
-    3. find current token definition
-       gtags-find-tag-froml-here
-    4. find symbol witch not defined in GTAGS
-       gtags-find-symbol
-    5. locate a string:
-       gtags-find-with-grep
-*** Using gtags find definition in project
-   - when ggtags-mode is enabled, use "ggtags-find-tag-dwim" 
-     + if the tag at point is definition, then jump to a reference.
-       if there are more than one references, list them.
-     + if the tag at point is reference, then jump to the definition.
-     + if the tag at point is a include header, then jump to the header.
-*** Using gtags find reference in project
-   using helm-gtags: helm-gtags-dwim or helm-gtags-find-rtags
-   + the point is inside the function, the prompt will default to function name.
-   + the point is on a function, it lists references of the function
-   + if  point is on a variable, C-c g s(gtags-find-symbol) will list the varible in this buffer
-*** find function that current function call
-   + 
-** Get the source code of a program under linux
-   
-** Speedbar and sr-speedbar
-    Basic usage:
-    + Use SPC to open the children of a node.
-    + RET to open the node in another window. If node is a file, open that file; if node is a directory, enter that directory; if node is a tag in a file, jump to the location of that tag in the file.
-    + U to go up parent directory.
-    + n or p moves to next or previous node.
-    + M-n or M-p moves to next or previous node at the current level.
-    + b switches to buffer list using Speedbar presentation. You can also open children of each buffer.
-    + f switches back to file list.
-
-    sr-speedbar-toggle open sr-speedbar
+** perl code debug
+    h or h h – for help page
+    c – to continue down from current execution till the breakpoint otherwise till the subroutine name or line number,
+    p – to show the values of variables,
+    b – to place the breakpoints,
+    L – to see the breakpoints set,
+    d – to delete the breakpoints,
+    s – to step into the next line execution.
+    n – to step over the next line execution, so if next line is subroutine call, it would execute subroutine but not descend into it for inspection.
+    source file – to take the debug commands from the file.
+    l subname – to see the execution statements available in a subroutine.
+    q – to quit from the debugger mode.
+** use dd command make usb booter...
+   sudo umount /dev/sda
+   sudo dd bs=4M if=input_linux.iso of=/dev/sda conv=fdatasync
 * passwd
   OA and OutNet:
   Name:hjiang
@@ -456,6 +752,17 @@ start the line with - [ ], toggle the check box using C-c C-c
   sa
   sa
 
+  CSGW ip and Passwd:
+  ip: 198.2.243.1
+  user: sg\se001
+  passwd: senew001
+
+  EzFT ip and passwd:
+  ip: 196.123.132.152 
+  user: bpc_opt
+  passwd: BPCqdckmm@00
+
+  196.123.134.171
 * OpenVms
 ** EzEI extract 广播数据使用说明：
   0）进入 bin目录，重置环境变量
@@ -612,6 +919,31 @@ start the line with - [ ], toggle the check box using C-c C-c
    SEA USER_FTOP_MSG_FILE "MASTER HRRM"
    显示:
    [INFORMATION] HRRM on Host(XXXX) is the Master HRRM 
+** OpenVms Command Reuslt to file:
+   assign/user_mode test.txt sys$output
+   your command
+   deassign/user_mode sys$output
+** OpenVms Create an empty file:
+   copy nl: file.txt
+** OpenVms Device Operation:...
+   SHOW DEV DSA /UNIT=BYTE
+   PURGE [...] /L
+** Upgrade
+   @BACK01$:[TOFF15.DATA.POST_BACKUP]POST_RESTORE_CNTRL.COM 
+* Atp Platform...
+** AM67 Market Data
+   应用进程 --> 写入 --> WP ---读取---> AM67 ---> 行情文件 ---> EI
+
+   Arch Init:
+   1. AppShl Init:
+      异步进程
+      无SET
+      无WP
+   
+      AppShlRegTimer注册定时器
+
+   2. 行情落地方式
+
 * Atp Frame Test
 ** upgrade to latest atp version
    @BACK01$:[TOFF15.DATA.POST_BACKUP]POST_RESTORE_CNTRL.COM
@@ -660,10 +992,154 @@ start the line with - [ ], toggle the check box using C-c C-c
    -RMS-E-FNF, file not found
    %PURGE-W-SEARCHFAIL, error searching for DSA0:[TOFF_NET15.DCL]*.COM;*
    -RMS-E-FNF, file not found
+   
+   CSGW1$:[MP130.HK001]REFF04020070613001.TXT
+   
+   CREATE/DIR AGP101$:[TOFF15.DATA.WORK.OAT]
+   define toff$oat_status AGP101$:[TOFF15.DATA.WORK.OAT] /G
+** CORE Plat MENU UPGRADE
+** Batch File List:
+*** 综业EI下线版本计划:
+
+   | 批次 | 下线内容                                                        | 原则                                      | 预计开发时间             |
+   |------+-----------------------------------------------------------------+-------------------------------------------+--------------------------|
+   |    1 | 从EzPAR接收的文件(2个), 向EzPAR发送的文件(2个)                  | 选择所内系统[重要程度低]收发文件下线      | 2018/8/25 -- 2018/9/15   |
+   |    2 | 所有所内系统收发文件下线[NGTS,信息公司,信息中心,业务管理系统等] | 所有所内系统收发文件下线,菜单收发文件下线 | 2018/9/15 -- 2018/10/15  |
+   |    3 | 所外系统收发文件下线[中登,港交所等]                             | 所有收发文件下线,包括批处理和菜单         | 2018/10/15 -- 2018/11/15 |
+
+
+   | 菜单项    | 源文件 | 目地地 | 脚本 | 改动 |
+   |-----------+--------+--------+------+------|
+   | M-8-1 and |        |        |      |      |
+
+   | BATCH_NUM | BATCH_NAME        | FILENAME              | FROM                     | TO                | DEAD_LINE | IN/OUT |   |   |   |   |
+   |-----------+-------------------+-----------------------+--------------------------+-------------------+-----------+--------+---+---+---+---|
+   |     77500 | SEND_SSJG         | USER_FNSSJG_FILE      | TOFF$TO_SGE              | TOFF$MP128_SE030  |    153000 | O      |   |   |   |   |
+   |     78200 | GEN_ZRTSB_FILES   | USER_FNZRTCJSB_FILE   | TOFF$TO_NGTS             | TOFF$MP001_SE030  |    153000 | O      |   |   |   |   |
+   |     78400 | GEN_ZRT_FILES     | USER_FNZRTCJ_FILE     | TOFF$TO_IS               | TOFF$MP100_SE030  |    201500 | O      |   |   |   |   |
+   |     81200 | GEN_VTE_FILES     | USER_FNVTOD_FILE      | TOFF$TO_IS               | TOFF$MP005_SE030  |    180000 | O      |   |   |   |   |
+   |     77600 | WAIT_SSMX_FILE    | USER_FNSSMX_FILE      | TOFF$MP030_SG001         | TOFF$FROM_SGE     |    153000 | I      |   |   |   |   |
+   |     76500 | GEN_BJCR          | USER_FNBJCR0_FILE     | TOFF$TO_SDC              | TOFF$MP110_SE001  |    153000 | O      |   |   |   |   |
+   |           |                   | USER_FNTRDS01_FILE    | TOFF$TO_SDC              | TOFF$MP110_SE030  |    153000 | O      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     76300 | GEN_BGH           | BGHZIP                | use: toff$exe:FCFCHG.EXE |                   |           | O      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     75300 | WAIT_AGKYYE_FILE  | USER_FNAGKYYE_FILE    | TOFF$MP030_SE001         | TOFF$FROM_NGTS    |    154000 | I      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     75200 | GEN_BT_FILES      | USER_FNDGHZIP_FILE    | TOFF$TO_NGTS             | TOFF$MP102_SE030  |    154500 | O      |   |   |   |   |
+   |           |                   | USER_FNDZAG0_FILE     | TOFF$TO_SDC              | TOFF$MP109_SE004  |    160000 | O      |   |   |   |   |
+   |           |                   | USER_FNDZBG0_FILE     | TOFF$TO_SDC              | TOFF$MP109_SE004  |    160000 | O      |   |   |   |   |
+   |           |                   | USER_FNDZCJ_FILE      | TOFF$TO_IS               | TOFF$MP003_SE030  |    153300 | O      |   |   |   |   |
+   |           |                   | USER_FNDZSB_FILE      | TOFF$TO_IS               | TOFF$MP003_SE030  |    153300 | O      |   |   |   |   |
+   |           |                   | USER_FNDZYX_FILE      | TOFF$TO_IS               | TOFF$MP003_SE030  |    153300 | O      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     75202 | PRCS_DZJCRD       | USER_FNJJKYED_FILE    | TOFF$TO_NGTS             | TOFF$MP001_SE030  |    160000 | O      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     75204 | WAIT_JJRDSJ       | USER_FNAGXSYE_FILE    | TOFF$MP030_SE001         | TOFF$FROM_NGTS    |    154000 | I      |   |   |   |   |
+   |           |                   | USER_FNJJRDJG_FILE    | TOFF$MP030_SE001         | TOFF$FROM_NGTS    |    160000 | I      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     75203 | SEND_BT_FILES     | USER_FNAGXSCJ_FILE    | TOFF$TO_SDC              | TOFF$MP109_SE001  |    163000 | O      |   |   |   |   |
+   |           |                   | USER_FNDZJCBB_FILE    | TOFF$TO_NGTS             | TOFF$MP100_SE001  |    163000 | O      |   |   |   |   |
+   |           |                   | USER_FNYYJCBB_FILE    | TOFF$TO_NGTS             | TOFF$MP049_SE030  |    160000 | O      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     77300 | SEND_SPSJ         | USER_FNSPSJ_FILE      | TOFF$TO_NGTS             | TOFF$MP001_SE030  |    160000 | O      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     76400 | GEN_AGCC          | USER_FNBGHZIP_FILE    | TOFF$TO_NGTS             | TOFF$MP001_SE030  |    153000 | O      |   |   |   |   |
+   |           |                   | USER_FNAGCC_FILE      | TOFF$TO_NGTS             | TOFF$MP102_SE030  |    154500 | O      |   |   |   |   |
+   |           |                   | USER_FNBGCC_FILE      | TOFF$TO_NGTS             | TOFF$MP102_SE030  |    154500 | O      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     76800 | GEN_ZYYE          | SE030ZYYE             | use: toff$exe:FCFCHG.EXE |                   |           | O      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     77700 | GEN_DDRZ          | USER_FNDDRZ_FILE      | TOFF$TO_IS               | TOFF$MP003_SE030  |    200000 | O      |   |   |   |   |
+   |     77010 | GEN_TRDS02        | USER_FNTRDS02_FILE    | TOFF$TO_SDC              | TOFF$MP110_SE030  |    160000 | O      |   |   |   |   |
+   |     41280 | GEN_PBULOGIN_INFO | USER_FNPBULOG_FILE    | TOFF$TO_STC              | TOFF$MP027_SE030  |    190000 | O      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     75600 | WAIT_EZPAR_FILE   | USER_FNBRKAUTEXP_FILE | TOFF$MP030_SE902         | TOFF$FROM_EZPAR   |    201500 | I      |   |   |   |   |
+   |           |                   | USER_FNBIZSTKEXP_FILE | TOFF$MP030_SE902         | TOFF$FROM_EZPAR   |    201500 | I      |   |   |   |   |
+   |           |                   | USER_FNHYXXEXP_FILE   | TOFF$MP030_SE902         | TOFF$FROM_EZPAR   |    201500 | I      |   |   |   |   |
+   |           |                   | USER_FNPBUAUTEXP_FILE | TOFF$MP030_SE902         | TOFF$FROM_EZPAR   |    201500 | I      |   |   |   |   |
+   |           |                   | USER_FNACCAUTEXP_FILE | TOFF$MP030_SE902         | TOFF$FROM_EZPAR   |    201500 | I      |   |   |   |   |
+   |           |                   | USER_FNZLWJ_FILE      | TOFF$MP030_SE902         | TOFF$FROM_EZPAR   |    201500 | I      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     75700 | PRCS_EZPAR_FILE   | USER_FNBRKAUTOUT_FILE | TOFF$TO_EZPAR            | TOFF$MP126_SE030  |    201500 | O      |   |   |   |   |
+   |           |                   | USER_FNDLZH_FILE      | TOFF$TO_EZPAR            | TOFF$MP902_SE030  |    201500 | O      |   |   |   |   |
+   |           |                   | USER_FNHYXXOUT_FILE   | TOFF$TO_EZPAR            | TOFF$MP126_SE030  |    201500 | O      |   |   |   |   |
+   |           |                   | USER_FNPBUAUTOUT_FILE | TOFF$TO_EZPAR            | TOFF$MP126_SE030  |    201500 | O      |   |   |   |   |
+   |           |                   | USER_FNRQXX_FILE      | TOFF$TO_EZPAR            | TOFF$MP129_SE030  |    201500 | O      |   |   |   |   |
+   |           |                   | USER_FNACCAUTOUT_FILE | TOFF$TO_EZPAR            | TOFF$MP126_SE030  |    201500 | O      |   |   |   |   |
+   |           |                   | USER_FNZLJG_FILE      | TOFF$TO_EZPAR            | TOFF$MP902_SE030  |    201500 | O      |   |   |   |   |
+   |           |                   | USER_FNBIZSTKOUT_FILE | TOFF$TO_EZPAR            | TOFF$MP126_SE030  |    201500 | O      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     71100 | WAIT_NEW_CQCX     | USER_FNCQBD_FILE      | TOFF$MP030_SE038         | TOFF$FROM_NGTS    |    200000 | I      |   |   |   |   |
+   |           |                   | USER_FNCQCX_FILE      | TOFF$MP030_SE038         | TOFF$FROM_NGTS    |    200000 | I      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     81600 | WAIT_VTE_FILE     | USER_FNVTIN_FILE      | TOFF$MP030_SE038         | TOFF$FROM_NGTS    |    164500 | I      |   |   |   |   |
+   |           |                   | USER_FNVTLS_FILE      | TOFF$MP133_SE038         | TOFF$FROM_NGTS    |    164500 | I      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     81700 | CHECK_VTE_FILE    | USER_FNVTLSGG_FILE    | TOFF$TO_IS               | TOFF$MP100_SE030  |    180000 | O      |   |   |   |   |
+   |           |                   | USER_FNVTLSGG_FILE    | TOFF$TO_IS               | TOFF$HK001_SE030  |    180000 | O      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     77400 | SEND_NGTS_FILE    | USER_FNCPSJ_FILE      | TOFF$TO_NGTS             | TOFF$MP001_SE030  |    180000 | O      |   |   |   |   |
+   |           |                   | USER_FNINSJ_FILE      | TOFF$TO_NGTS             | TOFF$MP001_SE030  |    180000 | O      |   |   |   |   |
+   |           |                   | USER_FNCKSJ_FILE      | TOFF$TO_NGTS             | TOFF$MP001_SE030  |    200000 | O      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     14500 | WAIT_NGTS_FILE    | USER_FNATPZIP_FILE    | TOFF$MP030_SE001         | TOFF$FROM_NGTS    |    213000 | I      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     76600 | WAIT_SDC_FILES    | USER_FNAGXSJG_FILE    | TOFF$MP106_SC001         | TOFF$FROM_SDC     |    190000 | I      |   |   |   |   |
+   |           |                   | USER_FNAZDJ_FILE      | TOFF$MP109_SE001         | TOFF$FROM_SDC     |    210000 | I      |   |   |   |   |
+   |           |                   | USER_FNBGJZ_FILE      | TOFF$MP105_SC001         | TOFF$FROM_SDC     |    210000 | I      |   |   |   |   |
+   |           |                   | USER_FNBJDJ1_FILE     | TOFF$MP105_SC001         | TOFF$FROM_SDC     |    220000 | I      |   |   |   |   |
+   |           |                   | USER_FNBXWJ1_FILE     | TOFF$MP105_SC001         | TOFF$FROM_SDC     |    210000 | I      |   |   |   |   |
+   |           |                   | USER_FNBZSL_FILE      | TOFF$MP102_CI001         | TOFF$FROM_SDC     |    160000 | I      |   |   |   |   |
+   |           |                   | USER_FNFHQX_FILE      | TOFF$MP001_SE012         | TOFF$FROM_MIG     |    210000 | I      |   |   |   |   |
+   |           |                   | USER_FNFLRELEASE_FILE | TOFF$MP142_SE012         | TOFF$FROM_MIG     |    220000 | I      |   |   |   |   |
+   |           |                   | USER_FNJYQX_FILE      | TOFF$MP105_SC001         | TOFF$FROM_SDC     |    210000 | I      |   |   |   |   |
+   |           |                   | SER_FNCPXX_FILE       | TOFF$MP100_SE001         | TOFF$FROM_NGTS    |    210000 | I      |   |   |   |   |
+   |           |                   | USER_FNPBUA_FILE      | TOFF$MP004_SE001         | TOFF$FROM_NGTS    |    210000 | I      |   |   |   |   |
+   |           |                   | USER_FNPBUB_FILE      | TOFF$MP004_SE001         | TOFF$FROM_NGTS    |    210000 | I      |   |   |   |   |
+   |           |                   | USER_FNZYDJ_FILE      | TOFF$MP030_SE001         | TOFF$FROM_NGTS    |    210000 | I      |   |   |   |   |
+   |           |                   | USER_FNZYYE_FILE      | TOFF$MP030_SE001         | TOFF$FROM_NGTS    |    210000 | I      |   |   |   |   |
+   |           |                   | USER_FNZHQX_FILE      | TOFF$MP030_SE001         | TOFF$FROM_MS      |    210000 | I      |   |   |   |   |
+   |           |                   | USER_FNHYPB_FILE      | TOFF$MP030_SE012         | TOFF$FROM_MIG     |    210000 | I      |   |   |   |   |
+   |           |                   | USER_FNQISJ_FILE      | TOFF$MP030_SE012         | TOFF$FROM_MIG     |    210000 | I      |   |   |   |   |
+   |           |                   | USER_FNQXKZ_FILE      | TOFF$MP001_SE012         | TOFF$FROM_MIG     |    210000 | I      |   |   |   |   |
+   |           |                   | USER_FNZPBQ_FILE      | TOFF$MP030_SE012         | TOFF$FROM_MIG     |    210000 | I      |   |   |   |   |
+   |           |                   | USER_FNBDZQ_FILE      | TOFF$MP125_SE001         | TOFF$FROM_EZTRANS |    210000 | I      |   |   |   |   |
+   |           |                   | USER_FNWDQY1_FILE     | TOFF$MP105_SC001         | TOFF$FROM_SDC     |    210000 | I      |   |   |   |   |
+   |           |                   | USER_FNYWXZ_FILE      | TOFF$MP106_SC001         | TOFF$FROM_SDC     |    210000 | I      |   |   |   |   |
+   |           |                   | USER_FNZQDJ1_FILE     | TOFF$MP105_SC001         | TOFF$FROM_SDC     |    210000 | I      |   |   |   |   |
+   |           |                   | USER_FNZQMX1_FILE     | TOFF$MP105_SC001         | TOFF$FROM_SDC     |    210000 | I      |   |   |   |   |
+   |           |                   | USER_FNZXCC_FILE      | TOFF$MP030_SE001         | TOFF$FROM_NGTS    |    210000 | I      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     76700 | CHK_SDC_FILES     | USER_FNBZSLGG_FILE    | TOFF$TO_NGTS             | TOFF$MP100_SE030  |    201500 | O      |   |   |   |   |
+   |           |                   | USER_FNPAUTOUT_FILE   | TOFF$TO_NGTS             | TOFF$MP001_SE030  |    201500 | O      |   |   |   |   |
+   |           |                   | USER_FNZRTBD_FILE     | TOFF$TO_NGTS             | TOFF$MP100_SE030  |    235900 | O      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     76704 | WAIT_ZYLT_FILE    | USER_FNJJZYLT_FILE    | TOFF$MP030_SE001         | TOFF$FROM_NGTS    |    160000 | I      |   |   |   |   |
+   |     76701 | WAIT_SFPM_FILE    | USER_FNSFPM_FILE      | TOFF$MPSHARE_SE023       | TOFF$FROM_FM      |    200000 | I      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     76702 | UPD_BRK_INFO      | HYXX                  | use: toff$exe:FCFCHG.EXE |                   |           | O      |   |   |   |   |
+   |           |                   | BRQX                  | use: toff$exe:FCFCHG.EXE |                   |           | O      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     76710 | CHK_LOF_SFPM      | USER_FNSFPMDF_FILE    | TOFF$TO_FM               | TOFF$MP023_SE030  |    201500 | O      |   |   |   |   |
+   |           |                   | USER_FNSFPMGG_FILE    | TOFF$TO_IS               | TOFF$MP100_SE030  |    203000 | O      |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+   |     77800 | GEN_RCDATA        | USER_FNINSTBIZ_FILE   | TOFF$TO_NGTS             | TOFF$MP036_SE030  |    220000 | O      |   |   |   |   |
+   |           |                   | USER_FNSE030CPXX_FILE | TOFF$TO_NGTS             | TOFF$MP036_SE030  |    203000 | O      |   |   |   |   |
+   |           |                   | USER_FNBRCREF_FILE    | TOFF$TO_NGTS             | TOFF$MP036_SE030  |    203000 | O      |   |   |   |   |
+   |           |                   | USER_FNSE030LJXX_FILE |                          |                   |           |        |   |   |   |   |
+   |           |                   |                       |                          |                   |           |        |   |   |   |   |
+* EI Down
+  ** DTP plat patches
+  url:
+  mcr toff$exe:ftdmon 
+
+  create /dir AGP102$:[TOFF15.DATA.DISTRIBUTE.FROM_BPC] /L
+  define toff$from_bpc AGP102$:[TOFF15.DATA.DISTRIBUTE.FROM_BPC] /G
 * ToDoList
 ** <2018-07-17 ÖÜ¶þ>                                               :20180717:
 *** DONE [#B] learn emacs org and make a todo list                      :org:
-*** DONE [#A] get the feeling of the offline of EI               :ei:offline:
+*** DONE [#A] get the feeling of the offle of EI                 :ei:offline:
 *** TODO [#C] programming pearl, ch2 algorithm                    :algorithm:
 *** code submit:
     [[file:code_submit.org][code_submit]]
@@ -671,3 +1147,182 @@ start the line with - [ ], toggle the check box using C-c C-c
 ** <2018-07-18 ÖÜÈý>
 ** <2018-07-20 ÖÜÎå>
 ** <2018-07-23 ÖÜÒ»>
+* Working Notes
+** <2018-08-27 周一>
+   - [ ] 核心平台操作简化方案和计划展示
+   - [ ] 综合业务平台EI下线计划和方案展示
+** <2018-08-29 周三>
+   - [ ] 操作简化单元测试用例完善
+   - [ ] 操作简化问题单完善
+   - [ ] EI下线一阶段开发计划和测试计划
+* PatchMending
+  ** 52265
+  conv/fdl=toff$fdl:FTBIZSTK.FDL USER_FTBIZSTK_FILE USER_FNBIZSTK_FILE /STAT
+  
+  设置751800产品生效日为20070313
+  conv/fdl=toff$fdl:FTBIZSTK.FDL USER_FTBIZSTK_FILE USER_FTBIZSTK_FILE /STAT
+  conv/fdl=toff$fdl:FTBIZSTK.FDL USER_FNBIZSTK_FILE USER_FNBIZSTK_FILE /STAT
+
+  @BACK01$:[AIR.SCRIPT]AUTO_RESTORE.COM BACK01$:[TOFF75.DATA.POST_BACKUP.POST_BACKUP_A040703_AST_20070312]
+
+  ed /read USER_FPENVCONF_FILE
+  
+  assign/user_mode toff$work_dir:test.txt sys$output
+
+  //恢复中断,导致系统logname lost
+  set proc /priv=all
+  @SYS$COMMON:[SYSMGR.SSE]TOFF$NGTS_STARTUP.COM @@ AC
+
+  copy uexe:testseri2.exe ast591"ngts_75 shanghai"::toff$work_dir: /ftp /l
+  
+  error opening AGP202$:[TOFF75.DATA.FILES]FTQUOOTB.DAT;* as input
+
+  @SYS$COMMON:[SYSMGR.SSE]TOFF$NGTS_STARTUP.COM 75 AC
+
+  SET VERIFY
+  SET PREFIX "(!12%T) "
+
+  DEASSIGN SYS$OUTPUT
+  DEASSIGN SYS$INPUT
+  
+  mcr tol$exe:XDATA.EXE USER_FNSERI20106_FILE  toff$fdl:RMSERI2T.FED toff$work_Dir:fnseri2.csv
+
+  conv /fdl=FTBIZSTK.FDL USER_FNBIZSTK_FILE USER_FNBIZSTK_FILE /STAT
+
+  copy toff$work_dir:MBH_UPD_INSTAT.EXE toff$exe: /l
+  copy toff$work_dir:MBH_UPD_INSTAT.C toff$exe: /l
+  copy toff$work_dir:BATAPPLSHL.C toff$exe: /l
+
+  mcr toff$exe:ftdmon -d
+
+  perl toff$work_dir:GETFILECSV.PL -b 76400 -o 76400.csv -l AST01 -r CSGWA
+  perl toff$work_dir:GETFILECSV.PL -b 75300 -o 75300.csv -l AST01 -r CSGWA
+  perl toff$work_dir:GETFILECSV.PL -b 75202 -o 75202.csv -l AST01 -r CSGWA
+  perl toff$work_dir:GETFILECSV.PL -b 75204 -o 75204.csv -l AST01 -r CSGWA
+  perl toff$work_dir:GETFILECSV.PL -b 75203 -o 75203.csv -l AST01 -r CSGWA
+  perl toff$work_dir:GETFILECSV.PL -b 75200 -o 75200.csv -l AST01 -r CSGWA
+  perl toff$work_dir:GETFILECSV.PL -b 77300 -o 77300.csv -l AST01 -r CSGWA
+  perl toff$work_dir:GETFILECSV.PL -b 76400 -o 76400.csv -l AST01 -r CSGWA
+  perl toff$work_dir:GETFILECSV.PL -b 77000 -o 77000.csv -l AST01 -r CSGWA  
+
+  perl toff$work_dir:GETFILECSV.PL -b 41280 -o 41280.csv -l AST01 -r CSGWA  
+
+  perl toff$work_dir:GETFILECSV.PL -b 75600 -o 75600.csv -l AST01 -r CSGWA  
+
+  perl toff$work_dir:GETFILECSV.PL -b 76600 -o toff$work_dir:76600.csv -l AST01 -r CSGWA  
+  perl toff$work_dir:GETFILECSV.PL -b 76700 -o toff$work_dir:76700.csv -l AST01 -r CSGWA  
+  perl toff$work_dir:GETFILECSV.PL -b 76704 -o toff$work_dir:76704.csv -l AST01 -r CSGWA  
+
+
+  create USER_FNDZJCBB_FILE /L
+  create USER_FNYYJCBB_FILE /L
+  create USER_FNDGHZIP_FILE /L
+  create USER_FNDZCJ_FILE /L
+  create USER_FNDZSB_FILE /L
+  create USER_FNDZYX_FILE /L
+
+  create USER_FNSPSJ_FILE /L
+
+  create USER_FNAGCC_FILE /L
+  create USER_FNBGCC_FILE /L
+
+  create USER_FNBRKAUTOUT_FILE /L
+  create USER_FNDLZH_FILE /L
+  create USER_FNHYXXOUT_FILE /L
+  create USER_FNPBUAUTOUT_FILE /L
+  create USER_FNRQXX_FILE /L
+  create USER_FNACCAUTOUT_FILE /L
+  create USER_FNZLJG_FILE /L
+  create USER_FNBIZSTKOUT_FILE /L
+
+  @TOFF$DCL:FLAGGEN USER_FNDZJCBB_FILE TOFF$TO_NGTS:
+  @TOFF$DCL:FLAGGEN USER_FNYYJCBB_FILE TOFF$TO_NGTS:
+  @TOFF$DCL:FLAGGEN USER_FNDGHZIP_FILE TOFF$TO_NGTS:
+  @TOFF$DCL:FLAGGEN USER_FNDZCJ_FILE   TOFF$TO_IS:
+  @TOFF$DCL:FLAGGEN USER_FNDZSB_FILE   TOFF$TO_IS:
+  @TOFF$DCL:FLAGGEN USER_FNDZYX_FILE   TOFF$TO_IS:
+  @TOFF$DCL:FLAGGEN USER_FNSPSJ_FILE   TOFF$TO_NGTS:
+
+  @TOFF$DCL:FLAGGEN USER_FNZRTCJ_FILE TOFF$TO_IS:
+  @TOFF$DCL:FLAGGEN USER_FNVTOD_FILE TOFF$TO_IS:
+
+  @TOFF$DCL:FLAGGEN USER_FNBGHZIP_FILE TOFF$TO_NGTS:
+  @TOFF$DCL:FLAGGEN USER_FNJJKYED_FILE TOFF$TO_NGTS:
+
+  @TOFF$DCL:FLAGGEN USER_FNAGCC_FILE TOFF$TO_NGTS:
+  @TOFF$DCL:FLAGGEN USER_FNBGCC_FILE TOFF$TO_NGTS:
+
+  BZSL
+
+  bzsl01120070313001.txt                                      |276             |20181016|084124|12          |587E497F3A0564082A305C91566404DA |
+  BZSL01120070313001.TXT                                      |276             |20181016|084057|12          |587E497F3A0564082A305C91566404DA |
+                                                                                                             DD191C5A1E608DC200448FB119AC15F4
+
+  openvms: F5096D43644462437C57059DAA79A2C8
+
+  linux:   587e497f3a0564082a305c91566404da
+
+  origi:   587E497F3A0564082A305C91566404DA
+
+  sed '/\$! MCR TOFF$EXE:FCFCHG.EXE -f/d' *
+* Latex...
+** LaTeX Special Character
+   [character]		[Purpose]
+   #
+   $
+   %			LaTeX comments
+   			Can also be used to split long input lines where no
+			whitespace or line breaks are allowed
+   ^
+   &
+   _
+   {			LaTeX parameters begin
+   }			LaTeX parameters end	\command[optional parameters]{parameters}
+   ~
+   \			LaTeX command
+
+** LaTeX Input File Structure
+   \documentclass{...}
+   \usepackage{...}
+   \begin{document}
+   \end{document}
+
+   tipical LaTeX command line session
+   1. use Emacs(or other editor) edit source file
+   2. shell or cmd.exe
+      latex test.tex
+   3. look at the file on screen
+      linux/unix: xdvi test.dvi &
+      windows: yap test.dvi
+
+      convert the dvi file to PostScript
+      dvips -Pcmz test.dvi -o test.ps
+
+      convert the dvi file to pdf
+      dvipdf test.dvi
+
+** The Layout Of A Doucument
+   3.1 documentclass
+   [type]			[usage]
+   article			scientific journals, presentations, short reports,
+                    program docmentation, invitations, ...
+   proc				a class for proceedings based on the article class
+   minimal			as small as possible
+   report			longer reports containing several chapters,
+   				    small books, PhD theses, ...
+   book 			for real book
+   slides
+   3.2 packages
+   3.3 pagestyle
+      
+* Useful links...
+** 用perl产生OPENVMS DCL脚本，并在后台执行这个脚本，
+   将这个脚本的执行结果收集文件中
+   [[file:d:/Org/TaskDir/EIDown2/TaskTest/GetAllBatchFileName/GetFileName.pl][GetFileName.pl]]
+** 获取后台代码的PERL脚本和包装在其上的SHELL脚本
+   [[file:~/MyBin/get_source.pl][get source]]
+   [[file:~/MyBin/GetSource][GetSource, bash script]]
+
+** EI下线任务相邻两期配置文件比对，并产生增量升级配置文件...
+   [[file:d:/Org/TaskDir/EIDown2/TaskTest/IncreGen.pl][IncreGen.pl]]
+   [[file:~/MyBin/IncreGen][IncreGen(Bash Wrapper file)]]
