@@ -493,6 +493,16 @@
    M-s s      ---> set-mark-command
    M-s n      ---> neotree-toggle
    C-x space  ---> rectangle-mark-mode
+** Org mode...
+** remember some position and then go back
+   C-x r <SPC> r      (point-to-register)
+   C-x r j r          (jump-to-register)
+*** Insert a column/row in a table:
+    S-M-<right>: insert a column before current cell
+    S-M-<down>: insert a row before current row
+*** Moving rows/cloumns
+    M-<down>: move current row down
+    M-<right>: move current column right
 * Emacs+Git => Magit
 ** magit-status : to display information about the current Git repository 
 ** p,n : Move between sections using ~p~ and ~n~.
@@ -790,7 +800,6 @@
   rdrlog: mcr tol$exe:showwp -rdr -set 109 -time *,*
   广播内存: mcr tol$exe:showwp  -brc -set 109 -p EZEI0 -tp 19 -range *,*
   订阅内存: mcr tol$exe:showall -hhbm -subinfo
-
 ** OPENVMS下DEBUG程序:
   本地主机上: set display/create/trans=tcpip/node=本地主机ip
   开发主机上: 
@@ -930,6 +939,11 @@
    PURGE [...] /L
 ** Upgrade
    @BACK01$:[TOFF15.DATA.POST_BACKUP]POST_RESTORE_CNTRL.COM 
+** ATP Commands...
+   @BACK01$:[AIR.SCRIPT]QUICKKILLENV.COM
+** OpenVMS Trace Net Packages...
+   tcptrace 198.1.75.1 /PORT=LOCAL=11518 /PACKETS=1000 /out=toff$work_dir:hjiang_11518.txt
+   tcptrace 198.1.186.1 /PORT=LOCAL=11518 /PACKETS=1000 /out=toff$work_dir:hjiang_11518.txt
 * Atp Platform...
 ** AM67 Market Data
    应用进程 --> 写入 --> WP ---读取---> AM67 ---> 行情文件 ---> EI
@@ -1326,3 +1340,56 @@
 ** EI下线任务相邻两期配置文件比对，并产生增量升级配置文件...
    [[file:d:/Org/TaskDir/EIDown2/TaskTest/IncreGen.pl][IncreGen.pl]]
    [[file:~/MyBin/IncreGen][IncreGen(Bash Wrapper file)]]
+* Hacking(Good and Bad taste)...
+** emacs and emacs lisp
+*** Give a man a new Emacs command and he can hack for a night;
+    Teach a man to make new Emacs commands and he can hack for a lifetime.
+*** Common Lisp: A gentle introduction to Symbolic Computation
+*** Writing gnu emacs extensions...
+    - [] ch1, Customizing Emacs
+         A. Binding Keystrokes to Commands
+            (global-set-key keysequence command)
+         example:
+            (global-set-key "\M-?" 'help-command)
+
+         B. Emacs most important online help : apropos
+         function : allows you to search all known variables and functions
+                    for a pattern you specify.
+         
+         hsha ash
+    - [] ch2, Simple New Commands
+    - [] ch3, Cooperating Commands
+    - [] ch4, Searching and Modifying Buffers
+    - [] ch5, Lisp Files
+    - [] ch6, Lists
+    - [] ch7, Minor Mode
+    - [] ch8, Evauation and Error Recovery
+    - [] ch9, A Major Mode
+    - [] ch10, A Comprehensive Example
+    - [] Appendix xxx
+* Golang...
+** Install go packages online or offline
+*** online: 
+    以go-sbvector包为例, 
+    go get github.com/hideo55/go-sbvector
+    上指令执行成功后程序调用
+    import (
+        "github.com/hideo55/go-sbvector"
+    )
+
+    offline:
+    在能连网的主机上执行online安装好package
+    查看这台连网主机的GOPATH,
+    go env
+    将GOPATH中新安装的package拷备到目标主机的GOPATH中
+** composite type
+*** slice
+    slices can't be compared
+* Task...
+  pipe show system | sea sys$input MAHBM001
+  stop/id=2023F14B
+  SET DISPLAY/CREATE/TRANS=TCPIP/NODE=196.131.8.129
+  mcr toff$work_dir:MAHBM001.EXE
+  MAHBM001,IPCS_SOCKET,IPCS_UCX_PLUG,STREAMIO
+  gcc -o Client CClient.c netmsg.c -lpthread
+  mcr tol$exe:showwp  -brc -set 106 -p ezei0 -tp 37 -range *,*
