@@ -35,7 +35,7 @@
     http://www.baidu.com
 *** link to file
     file:/files.txt
-** tables
+** tab
 * Gdb usage
 ** compiling source file to debug            :symbolic:dubugging:information:
    gcc -g test.c -o test
@@ -1393,3 +1393,37 @@
   MAHBM001,IPCS_SOCKET,IPCS_UCX_PLUG,STREAMIO
   gcc -o Client CClient.c netmsg.c -lpthread
   mcr tol$exe:showwp  -brc -set 106 -p ezei0 -tp 37 -range *,*
+
+  1. 根据测试组架构测试报告, 综业定单成交簿打满之后, 批处理可以正常进行;
+  2. 综业出现每秒上千笔定单的情形,跨平台消息管理器(CPCM)主处理会被跨平台请求处理占用,会导致跨平台响应处理的延迟;
+  3. 如果综业瞬时定单量继续升高, 跨平台消息管理器(CPCM)队列会被打满, 导致跨平台请求丢失, 出现丢单情况;
+     目前综业平台存在跨平台的业务:
+     a) 分级基金母基金和子基金的拆分合并;
+     b) ETF业务
+     c) 大宗交易成交买卖, 大宗资产证券化成交买卖,集合资产管理计划成交买卖
+     d) 非公开发行优先股成交卖单和撤单
+     e) 大宗盘后固定价格
+     f) 转融通
+     g) 国债预发行
+     h) 投票业务
+  4. 港股通平台定单簿和成交簿大小配置为2kw, 但由于发往EzEI定单会占用广播消息表(表大小为2kw), 广播消息表无法支持2kw的成交. 所以目前港股通支持的最大定单量无法达到1kw, 但目前港股通每日定单
+     量只有11w左右;
+  5. 港股通定单和成交数量超过45w时, 闭市时落OTB的时间超过30s,导至EzEI在这段时间收不到港股通后台心跳,EzEI发生切换,但不会对业务处理造成影响;
+  6. 观察最近多日综业和港股通定单簿和成交簿的占用比:
+     1) 回购类业务定单簿使用比例最高, 每天维持在10%左右;
+     2) 大宗交易业务定单簿使用比例约为0.01%, 成交数量维持在每天20笔左右,成交簿使用可以忽略不计;
+     3) 跨境ETF业务定单簿使用比例不超过2%;
+     4) 转融通业务定单簿使用比例不超过1%, 成交簿使用可以忽略不计;
+     5) 货币基金及LOF业务定单簿使用比例不超过5%;
+     6) 国债预发行业务定单簿一直为空;
+     7) 投票类业务定单簿使用比例不超过0.2%;
+     判断综业和港股通平台可以承受目前的市场定单活跃的情况.
+
+  7. 综业和港股通平台运营监测点:
+     a) 每台主机工作页面配置和当日使用比例;
+     b) 每台主机消息缓存配置和当日使用比例;
+     c) 每个产品集定单簿和成交簿配置和当日使用比例;
+
+* GoLang...
+** Go at Google: Language Design in the Service of Software Engineering
+   [[https://talks.golang.org/2012/splash.article][Go at Google]]

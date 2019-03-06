@@ -1,0 +1,59 @@
+* The Org Mode
+** Visibility Cycling
+   [TAB] org-cycle
+   [S-TAB] org-global-cycle
+** Heading Motion
+   C-c C-n: next heading
+   C-c C-p: previous heading
+   C-c C-f: next heading same level
+   C-c C-b: previous heading same level
+   C-c C-u: backward to higher heading
+** Structure Editing...
+*** insert
+   M-RET: insert a heading, item or row
+   C-RET: insert a new heading at the end of the current subtree
+   M-S-RET: insert a todo heading
+   C-S-RET: insert a todo heading
+*** level promote and demote
+   M-Left : promote current heading one level
+   M-Right: demote current heading one level
+   M-S-Left: promote current subtree one level
+   M-S-Right: demote current subtree one level
+*** subtree moving
+   M-Up: move subtree up
+   M-Down: move subtree down   
+*** subtree mark,copy,cut and paste
+   C-c @: mark current subtree
+   C-c C-x C-w: cut current subtree
+   C-c C-x M-w: copy current subtree
+   C-c C-x C-y: yank subtree
+** Sparse Trees
+   C-c /  : promote sparse trees command
+   C-c / r : regex sparse trees 
+** Plain List
+   
+* The Go Programming Language
+** The Basic 
+** Golang IO
+   [[https://medium.com/learning-the-go-programming-language/streaming-io-in-go-d93507931185][Golang IO]]
+** Golang Book Resources...
+   [[https://github.com/dariubs/GoBooks][Go Lang book resource]]
+* Distibute Systems...
+  [[https://www.toptal.com/big-data/consistent-hashing][Consistent Hasing]]
+  [[http://www.aosabook.org/en/distsys.html][Scalable Web Architecture and Distributed Systems]]
+* Something About Design...
+** foudation:
+   the design of everyday things
+   emotional design
+** research
+   the user experience team of one
+   just enough research
+** Brand/Marketing
+   Emotional Branding
+   Ogilvy on Advertisings
+   Positioning: The Battle for you mind
+** Interactive Design
+   Designing the obvious
+   GUI bloopers 2.0
+   Don't make me think
+   Sketching User Experiences
