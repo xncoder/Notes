@@ -57,3 +57,50 @@
    GUI bloopers 2.0
    Don't make me think
    Sketching User Experiences
+* SQL and Database
+** Create a new user in a MySQL server:
+     create user 'hjiang'@'localhost' identified by 'jiang186212';
+   then add some databases to this user:
+     grant all privileges on bank.* to 'hjiang'@'localhost';
+   then attatch to some database:
+     use bank;
+** Load a .SQL file into MySQL
+   1. attach to a database:
+      use bank;
+   2. source the .SQL file:
+      source C:\LearningSQLExample.sql
+** Using MySQL command line tool:
+   1. specifying a username and a database
+   mysql -u hjiang -p passwd bank
+   2. data and time
+   select now()
+** MySQL datatypes:
+   1. character data:
+     char(20): fix 20 len,
+     varchar(20): variable 20 len,
+   2. character set:
+     varchar(20) character set utf8 --> set one column to utf8
+     create database foreign_sales character set utf8; --> create a utf8 database
+   3. numeric data:
+     | Type      | Signed Range                                            | unsigned range                  |
+     |-----------+---------------------------------------------------------+---------------------------------|
+     | Tinyint   | −128 to 127                                             | 0 to 255                        |
+     | Smallint  | −32,768 to 32,767                                       | 0 to 65,535                     |
+     | Mediumint | −8,388,608 to 8,388,607                                 | 0 to 16,777,215                 |
+     | Int       | −2,147,483,648 to 2,147,483,647                         | 0 to 4,294,967,295              |
+     | Bigint    | −9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 | 0 to 18,446,744,073,709,551,615 |
+   4. float number:
+     | Type        | Numeric range                                                                                               |
+     |-------------+-------------------------------------------------------------------------------------------------------------|
+     | Float(p,s)  | −3.402823466E+38 to −1.175494351E-38 and 1.175494351E-38 to 3.402823466E+38                                 |
+     | Double(p,s) | −1.7976931348623157E+308 to −2.2250738585072014E-308 and 2.2250738585072014E-308 to 1.7976931348623157E+308 |
+   5. Temporal Data:
+     | Type      | Default format      | Allowable values                           |
+     |-----------+---------------------+--------------------------------------------|
+     | Date      | YYYY-MM-DD          | 1000-01-01 to 9999-12-31                   |
+     | Datetime  | YYYY-MM-DD HH:MI:SS | 1000-01-01 00:00:00 to 9999-12-31 23:59:59 |
+     | Timestamp | YYYY-MM-DD HH:MI:SS | 1970-01-01 00:00:00 to 2037-12-31 23:59:59 |
+     | Year      | YYYY                | 1901 to 2155                               |
+     | Time      | HHH:MI:SS           | −838:59:59 to 838:59:59                    |
+
+   
