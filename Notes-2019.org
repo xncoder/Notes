@@ -101,6 +101,4 @@
      | Datetime  | YYYY-MM-DD HH:MI:SS | 1000-01-01 00:00:00 to 9999-12-31 23:59:59 |
      | Timestamp | YYYY-MM-DD HH:MI:SS | 1970-01-01 00:00:00 to 2037-12-31 23:59:59 |
      | Year      | YYYY                | 1901 to 2155                               |
-     | Time      | HHH:MI:SS           | −838:59:59 to 838:59:59                    |
-
-   
+     | Time      | HHH:MI:SS           | −838:59:59 to 838:59:59             
