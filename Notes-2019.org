@@ -38,9 +38,14 @@
    [[https://medium.com/learning-the-go-programming-language/streaming-io-in-go-d93507931185][Golang IO]]
 ** Golang Book Resources...
    [[https://github.com/dariubs/GoBooks][Go Lang book resource]]
+** Golang and Cocurrent Programming...
+*** goroutines and channels(communicating sequential pocesses)
+   1. unbuffered channels
+   unbuffered channels is just synchronous channels
 * Distibute Systems...
   [[https://www.toptal.com/big-data/consistent-hashing][Consistent Hasing]]
   [[http://www.aosabook.org/en/distsys.html][Scalable Web Architecture and Distributed Systems]]
+** hacking openvms distibute locking system
 * Something About Design...
 ** foudation:
    the design of everyday things
@@ -101,4 +106,105 @@
      | Datetime  | YYYY-MM-DD HH:MI:SS | 1000-01-01 00:00:00 to 9999-12-31 23:59:59 |
      | Timestamp | YYYY-MM-DD HH:MI:SS | 1970-01-01 00:00:00 to 2037-12-31 23:59:59 |
      | Year      | YYYY                | 1901 to 2155                               |
-     | Time      | HHH:MI:SS           | −838:59:59 to 838:59:59             
+     | Time      | HHH:MI:SS           | −838:59:59 to 838:59:59                    |
+
+     grant all privileges on test.* to 'hjiang'@'localhost';
+   
+* Redis
+** Redis Config...
+  1. check all configs on current Redis Server:
+     CONFIG GET *
+  2. update configurations:
+     CONFIG SET loglevel "notice"
+** Redis Data Types...
+  1. keys:
+     binary safe(you can use any binary sequence as a key)
+     some tips about keys:
+     a. Very long keys is not a good idea;
+     b. Very short keys is not a good idea;
+     c. Try stick with a shcema;
+     d. The max allow key size is 512MB
+
+  2. Strings:
+     Redis string type is the simplest type of value you can associate with a Redis key
+   | set | SET name "hjiang" |
+   | get | GET name          |
+
+  3. Hashes:
+   Redis Hashes are maps between string fields and string values
+   | set | hmset test name sex age "hjiang" "M" 23 |
+   | get | hgetall test                            | 
+
+   Some Commands on Hashes:
+   
+  4. Lists: 
+   Redis list are lists of strings, sorted by insert order.
+   User can add on the list head or the tail.
+   | push | lpush test-list "string1" |
+   | push | lpush test-list "string2" |
+   | push | lpush test-list "string3" |
+   | look | lrange test-list 0 10     |
+
+  5. Sets:
+   Redis Sets are an unordered collection of strings.
+   |----------------------------------------------|
+   | redis 127.0.0.1:6379> sadd name-set "hjiang" |
+   | redis 127.0.0.1:6379> sadd name-set "xiaomi" |
+   | redis 127.0.0.1:6379> sadd name-set "james"  |
+   | redis 127.0.0.1:6379> sadd name-set "hjiang" |
+   | redis 127.0.0.1:6379> smembers name-set      |
+   | 1) "xiaomi"                                  |
+   | 2) "james"                                   |
+   | 3) "hjiang"                                  |
+
+  6. Sorted Sets:
+   members of Sorted sets are unique, but scores can repeat
+   |-----------------------------------------------------|
+   | redis 127.0.0.1:6379> zadd sort-set 1 "hjiang"      |
+   | redis 127.0.0.1:6379> zadd sort-set 2 "heng"        |
+   | redis 127.0.0.1:6379> zadd sort-set 2 "jiangheng"   |
+   | redis 127.0.0.1:6379> zrangebyscore sort-set 0 1000 |
+   | 1) "hjiang"                                         |
+   | 2) "heng"                                           |
+   | 3) "jiangheng"                                      |
+   | redis 127.0.0.1:6379> zadd sort-set 0 "xiaomi"      |
+   | redis 127.0.0.1:6379> zrangebyscore sort-set 0 1000 |
+   | 1) "xiaomi"                                         |
+   | 2) "hjiang"                                         |
+   | 3) "heng"                                           |
+   | 4) "jiangheng"                                      |
+
+  7. BitMap:
+   a) constant time single bit operations
+   b) operations on group of bits
+   cons: provide extreme space savings when storing information
+
+** Lua and Redis...
+** Golang and Redis...
+   1. connect to a redis-server
+#+NAME: 
+#+BEGIN_SRC go 
+   import "github.com/go-redis/redis"
+   
+   redisdb := redis.NewClient(&redis.Options{
+		Addr: "localhost:6379", //default address
+		Password: "",           //no passwd set
+		DB:       0,            //use default db
+	})
+
+	pong, err := redisdb.Ping().Result()
+	fmt.Println(pong, err)
+#+END_SRC
+   
+* Common Lisp
+** QuickLisp and Library transplant
+  1. copy ~/quicklisp/ to Dest mechine(windows home dir)
+  2. copy ~/.sbclrc to Dest mechine(windows home dir)
+  3. restart sbcl, then quicklisp is auto loaded into sbcl next time
+  4. (ql:quickload "xxxxx")
+     tips: xxxxx must already in ~/quicklisp/dists/quicklisp/installed 
+** Format
+#+NAME: 
+#+BEGIN_SRC lisp
+
+#+END_SRC
