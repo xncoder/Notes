@@ -46,6 +46,7 @@
   [[https://www.toptal.com/big-data/consistent-hashing][Consistent Hasing]]
   [[http://www.aosabook.org/en/distsys.html][Scalable Web Architecture and Distributed Systems]]
 ** hacking openvms distibute locking system
+** ecdt and coreos
 * Something About Design...
 ** foudation:
    the design of everyday things
@@ -196,6 +197,10 @@
 	fmt.Println(pong, err)
 #+END_SRC
    
+* Amzaon AWS
+** User:
+   hjiangsse
+   Jiang186212
 * Common Lisp
 ** QuickLisp and Library transplant
   1. copy ~/quicklisp/ to Dest mechine(windows home dir)
@@ -208,3 +213,8 @@
 #+BEGIN_SRC lisp
 
 #+END_SRC
+* Vagrant and Virtual Mechine
+** Use Vagrant to build a cluster on local mechine
+  1. 用vagrant在本地机器上部署一个3台coreos主机的集群; youtube上有相关视频；
+  2. 在集群中的coreos上部署etcd
+  3. etcd的简单使用
