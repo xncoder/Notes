@@ -218,3 +218,13 @@
   1. 用vagrant在本地机器上部署一个3台coreos主机的集群; youtube上有相关视频；
   2. 在集群中的coreos上部署etcd
   3. etcd的简单使用
+  
+  core-01: 172.17.8.101
+  core-02: 172.17.8.102
+  core-03: 172.17.8.103
+
+cd ~
+mkdir src
+cd src
+sudo wget ...gitbub.com/v3.3.12/...
+* Protobuff
