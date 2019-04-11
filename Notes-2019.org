@@ -213,7 +213,7 @@
 #+BEGIN_SRC lisp
 
 #+END_SRC
-* Vagrant and Virtual Mechine
+* Vagrant and Docker
 ** Use Vagrant to build a cluster on local mechine
   1. 用vagrant在本地机器上部署一个3台coreos主机的集群; youtube上有相关视频；
   2. 在集群中的coreos上部署etcd
@@ -223,8 +223,49 @@
   core-02: 172.17.8.102
   core-03: 172.17.8.103
 
-cd ~
-mkdir src
-cd src
-sudo wget ...gitbub.com/v3.3.12/...
+  cd ~
+  mkdir src
+  cd src
+  sudo wget ...gitbub.com/v3.3.12/...
+** Docker install
+1). Set up the docker repository
+sudo apt-get update
+sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+2). Install Docker CE
+sudo apt-get update
+sudo apt-get install docker-ce
+
+3). Verify the installation
+sudo docker run hello-world
+
+** Config Docker after install on linux
+$sudo groupadd docker
+$sudo usermod -aG docker $USER
+
+## List Docker CLI commands
+docker
+docker container --help
+
+## Display Docker version and info
+docker --version
+docker version
+docker info
+
+## Execute Docker image
+docker run hello-world
+
+## List Docker images
+docker image ls
+
+## List Docker containers (running, all, all in quiet mode)
+docker container ls
+docker container ls --all
+docker container ls -aq
+** Docker: create a container
+   Dockerfile defines what goes on in the environment inside your container. 
+** Using Docker build a etcd cluster
 * Protobuff
+* Kafka
