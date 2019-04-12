@@ -213,59 +213,227 @@
 #+BEGIN_SRC lisp
 
 #+END_SRC
-* Vagrant and Docker
-** Use Vagrant to build a cluster on local mechine
-  1. 用vagrant在本地机器上部署一个3台coreos主机的集群; youtube上有相关视频；
-  2. 在集群中的coreos上部署etcd
-  3. etcd的简单使用
-  
-  core-01: 172.17.8.101
-  core-02: 172.17.8.102
-  core-03: 172.17.8.103
+* Etcd
+** Start and Install
+etcd is designed to reliably store infrequently updated data and provide reliable watch queries. 
+etcd exposes previous versions of key-value pairs to support inexpensive snapshots and watch history events (“time travel queries”). 
+A persistent, multi-version, concurrency-control data model is a good fit for these use cases.
 
-  cd ~
-  mkdir src
-  cd src
-  sudo wget ...gitbub.com/v3.3.12/...
-** Docker install
-1). Set up the docker repository
-sudo apt-get update
-sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+./bin/etcd 
+curl -L http://127.0.0.1:2379/versison
+** key space operations
+docs: 
+[[https://coreos.com/etcd/docs/latest/v2/api.html#atomically-creating-in-order-keys][communicating with etcd V2]]
+*** Setting the value of key:
+    command:
+    curl http://127.0.0.1:2379/v2/keys/message -XPUT -d value="Hello world"
 
-2). Install Docker CE
-sudo apt-get update
-sudo apt-get install docker-ce
+    etcd return:
+    {
+        "action":"set",              //the action of the request we just made
+        "node":{ 
+            "key":"/message",        //the http path which the rquest was made
+            "value":"Hello world",   //the value of the key after resolving the request
+            "modifiedIndex":4,       //unique, monotonically-incrementing integer created for each change to etcd
+            "createdIndex":4         //unique, monotonically-incrementing integer created for each change to etcd
+         }
+     }
+*** etcd http header:
+    command:
+    curl http://127.0.0.1:2379/v2/keys/message -I
 
-3). Verify the installation
-sudo docker run hello-world
+    etcd return:
+    HTTP/1.1 200 OK
+    Content-Length: 100
+    Access-Control-Allow-Headers: accept, content-type, authorization
+    Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE
+    Access-Control-Allow-Origin: *
+    Content-Type: application/json
+    Date: Fri, 12 Apr 2019 05:39:32 GMT
+    Keep-Alive: timeout=58
+    X-Etcd-Cluster-Id: cdf818194e3a8c32
+    X-Etcd-Index: 4
+    X-Raft-Index: 5
+    X-Raft-Term: 2
 
-** Config Docker after install on linux
-$sudo groupadd docker
-$sudo usermod -aG docker $USER
+*** get the value of a key:
+    command:
+    curl http://127.0.0.1:2379/v2/keys/message
 
-## List Docker CLI commands
-docker
-docker container --help
+    etcd return:
+    {"action":"get","node":{"key":"/message","value":"Hello world","modifiedIndex":4,"createdIndex":4}}
 
-## Display Docker version and info
-docker --version
-docker version
-docker info
+*** change the value of a key:
+    You can change the value of /message from "hello world" to "hello etcd" with another PUT request:
+    command:
+    curl http://127.0.0.1:2379/v2/keys/message -XPUT -d value="Hello hjiang"
 
-## Execute Docker image
-docker run hello-world
+    etcd return:
+    {
+        "action":"set",
+        "node":
+            {"key":"/message",
+            "value":"Hello hjiang",
+            "modifiedIndex":5,
+            "createdIndex":5},
+         "prevNode":
+            {"key":"/message",
+             "value":"Hello world",
+             "modifiedIndex":4,
+             "createdIndex":4}
+     }
 
-## List Docker images
-docker image ls
+*** delete a key
+    command:
+    curl http://127.0.0.1:2379/v2/keys/message -XDELETE
 
-## List Docker containers (running, all, all in quiet mode)
-docker container ls
-docker container ls --all
-docker container ls -aq
-** Docker: create a container
-   Dockerfile defines what goes on in the environment inside your container. 
-** Using Docker build a etcd cluster
+    etcd return:
+    {
+        "action":"delete",
+        "node":{
+            "key":"/message",
+            "modifiedIndex":6,
+            "createdIndex":5},
+        "prevNode":{
+            "key":"/message",
+            "value":"Hello hjiang",
+            "modifiedIndex":5,
+            "createdIndex":5}
+     }
+
+*** using key TTL
+    Keys in etcd can be set to expire after a specified number of seconds. 
+    You can do this by setting a TTL (time to live) on the key when sending a PUT request:
+
+    command:
+    curl http://127.0.0.1:2379/v2/keys/foo -XPUT -d value=bar -d ttl=5
+
+    etcd return:
+    {
+        "action":"set",
+        "node":
+            {"key":"/foo",
+             "value":"bar",
+             "expiration":"2019-04-12T05:55:24.483911539Z",
+             "ttl":5,
+             "modifiedIndex":7,
+             "createdIndex":7}
+    }
+
+    after 5 seconds you send a GET request:
+    {
+        "errorCode":100,
+        "message":"Key not found",
+        "cause":"/foo",
+        "index":8
+    }
+
+    you can unset a TTL for a key:
+    curl http://127.0.0.1:2379/v2/keys/foo -XPUT -d value=bar -d ttl= -d prevExist=true
+    this command only valid before TTL expiried
+
+    etcd return:
+    {
+        "action":"update",
+        "node":
+         {"key":"/foo",
+         "value":"bar",
+         "modifiedIndex":10,
+         "createdIndex":9},
+        "prevNode":
+         {"key":"/foo",
+          "value":"bar",
+          "expiration":"2019-04-12T06:03:26.911069511Z",
+          "ttl":1,
+          "modifiedIndex":9,
+          "createdIndex":9}
+     }
+*** refreshing key TTL:
+    curl http://127.0.0.1:2379/v2/keys/foo -XPUT -d value=bar -d ttl=20
+    curl http://127.0.0.1:2379/v2/keys/foo -XPUT -d ttl=5 -d refresh=true -d prevExist=true
+*** waiting for a change:
+    On terminal 1, send a GET with wait=true:
+    curl http://127.0.0.1:2379/v2/keys/foo?wait=true:, this will waiting for any changes at path /foo
+
+    On terminal 2, we set a key /foo with value "bar":
+    curl http://127.0.0.1:2379/v2/keys/foo -XPUT -d value=bar
+
+    Now, the two terminal will get the same result:
+    {
+        "action":"set",
+        "node":
+        {
+            "key":"/foo",
+            "value":"bar",
+            "modifiedIndex":22,
+            "createdIndex":22
+        }
+    }
+
+*** atomically creating in-order keys
+   Command 1:
+   curl http://127.0.0.1:2379/v2/keys/queue -XPOST -d value=Job1
+
+   ETCD RETURN:
+   {
+       "action":"create",
+       "node":
+       {
+           "key":"/queue/00000000000000000023",
+           "value":"Job1",
+           "modifiedIndex":23,
+           "createdIndex":23
+       }
+   }
+
+   command 2:
+   curl http://127.0.0.1:2379/v2/keys/queue -XPOST -d value=Job2
+
+   ETCD RETURN:
+   {
+       "action":"create",
+       "node":
+       {
+           "key":"/queue/00000000000000000024",
+           "value":"Job2",
+           "modifiedIndex":24,
+           "createdIndex":24
+       }
+   }
+
+** vagrant and etcd...
+** install vagrant and Virtualbox
+1. Download the latest virtualbox then install:
+   sudo dpkg -i virtualbox-6.0_6.0.4-128413~Ubuntu~bionic_amd64.deb
+
+2. sudo apt-get install vagrant
+** Vagrant Boxes:
+*** install a box:
+vagrant box add hashicorp/precise64
+
+result:
+==> box: Loading metadata for box 'hashicorp/precise64'
+    box: URL: https://vagrantcloud.com/hashicorp/precise64
+This box can work with multiple providers! The providers that it
+can work with are listed below. Please review the list and choose
+the provider you will be working with.
+
+1) hyperv
+2) virtualbox
+3) vmware_fusion
+
+Enter your choice: 2
+==> box: Adding box 'hashicorp/precise64' (v1.1.0) for provider: virtualbox
+    box: Downloading: https://vagrantcloud.com/hashicorp/boxes/precise64/versions/1.1.0/providers/virtualbox.box
+==> box: Successfully added box 'hashicorp/precise64' (v1.1.0) for 'virtualbox'!
+*** using a box:
+config our project use it as a base
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "hashicorp/precise64"
+*** up and ssh:
+
 * Protobuff
 * Kafka
+
+
