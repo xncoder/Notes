@@ -571,6 +571,18 @@ func main() {
 ** emacs gocode install:
 go get -u github.com/nsf/gocode
 gocode set propose-builtins true
+* SBE protocol...
+** The design principle behind SBE
+*** Copy-Free: 
+    No intermediate buffers for encoding and decoding of messages
+    SBE take the approach of encoding and decoding directly to/from the underlying buffer.
+*** Native Type Mapping:
+*** Allocation-Free:
+*** Streaming-Access:
+    The best performance, and most consistent latency, is gained by taking a stream based approach
+    that addresses memory in an ascending sequential access pattern.
+*** Word Aligned Access:
+** How to use SBE Tool?
 * Kafka
 
 
