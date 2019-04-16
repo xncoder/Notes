@@ -433,7 +433,142 @@ Vagrant.configure("2") do |config|
   config.vm.box = "hashicorp/precise64"
 *** up and ssh:
 
-* Protobuff
+** Static initialize a etcd cluster:
+* GoLang
+** log(logrus)
+*** logrus or log rotate
+    logrus--->hook--->github.com/lestrrat/go-file-rotatelogs
+*** logrus hooks
+#+NAME: 
+#+BEGIN_SRC go
+package main
+
+import (
+	"github.com/sirupsen/logrus"
+)
+
+//A user defined hook
+type Hook struct {
+	name string
+}
+
+func NewHook(name string) (h *Hook) {
+	return &Hook{name}
+}
+
+func (hook *Hook) Fire(entry *logrus.Entry) (err error) {
+	entry.Data["appName"] = "MyApp"
+	return nil
+}
+
+func (hook *Hook) Levels() []logrus.Level {
+	return logrus.AllLevels
+}
+
+func init() {
+	logrus.AddHook(NewHook("test"))
+}
+
+func main() {
+	logrus.WithFields(logrus.Fields{
+		"animal": "dog",
+		"age":    "10",
+	}).Info("This dog is ten years old now!")
+}
+#+END_SRC
+*** 日志级别,日志分割,日志分发
+** protobuff and go
+why we use protobuff in go?
+1. you can use gobs to serialize go data structure, but it
+is specific in a go-env, you can not share data for other platform
+
+2. XML is so big and heavy.
+------------------------
+*** install protobuf on ubuntu
+#+NAME:
+#+BEGIN_SRC bash
+# Make sure you grab the latest version
+curl -OL https://github.com/google/protobuf/releases/download/v3.7.1/protoc-3.7.1-linux-x86_64.zip
+
+# Unzip
+unzip protoc-3.7.1-linux-x86_64.zip -d protoc3
+
+# Move protoc to /usr/local/bin/
+sudo mv protoc3/bin/* /usr/local/bin/
+
+# Move protoc3/include to /usr/local/include/
+sudo mv protoc3/include/* /usr/local/include/
+
+# Optional: change owner
+sudo chwon hjiang /usr/local/bin/protoc
+sudo chwon -R hjiang /usr/local/include/google
+#+END_SRC
+*** compile your protocol buffers
+go get -u github.com/golang/protobuf/protoc-gen-go
+protoc -I=$SRC_DIR --go_out=$DST_DIR $SRC_DIR/addressbook.proto
+*** use protobuf in golang:
+#+NAME:
+#+BEGIN_SRC go
+package main
+
+import (
+	pb "./tutorial"
+	"fmt"
+	proto "github.com/golang/protobuf/proto"
+	"io/ioutil"
+	"log"
+)
+
+func main() {
+	p1 := pb.Person{
+		Id:    1234,
+		Name:  "John Doe",
+		Email: "jdoe@example.com",
+		Phones: []*pb.Person_PhoneNumber{
+			{Number: "555-4321", Type: pb.Person_HOME},
+		},
+	}
+
+	p2 := pb.Person{
+		Id:    1235,
+		Name:  "hjiang",
+		Email: "hjiang@sse.com.cn",
+		Phones: []*pb.Person_PhoneNumber{
+			{Number: "555-4320", Type: pb.Person_HOME},
+		},
+	}
+
+	book := pb.AddressBook{
+		People: []*pb.Person{
+			&p1, &p2,
+		},
+	}
+
+	//write the new address book to disk
+	out, err := proto.Marshal(&book)
+	if err != nil {
+		log.Fatalln("Failed to encode address book:", err)
+	}
+
+	if err := ioutil.WriteFile("./addressbook.txt", out, 0664); err != nil {
+		log.Fatalln("Failed to write address book:", err)
+	}
+
+	//read the address book back
+	in, err := ioutil.ReadFile("./addressbook.txt")
+	if err != nil {
+		log.Fatalln("Failed to reading file:", err)
+	}
+
+	readed_book := &pb.AddressBook{}
+	if err := proto.Unmarshal(in, readed_book); err != nil {
+		log.Fatalln("Failed to parse address book:", err)
+	}
+
+	fmt.Println(*readed_book)
+}
+#+END_SRC
+** emacs gocode install:
 * Kafka
 
 
